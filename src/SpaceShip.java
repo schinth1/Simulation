@@ -11,6 +11,6 @@ public interface SpaceShip {
     public boolean canCarry(Item item);
 
     /* a method that also takes an Item object and updates the current weight of the rocket. */
-     public void carry();
+     public void carry(Item item);
 
 }
