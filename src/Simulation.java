@@ -7,9 +7,6 @@ import java.util.ArrayList;
 
 public class Simulation {
 
-//    private ArrayList<Rocket> rocketU1;
-//    private ArrayList<Rocket> rocketU2;
-
     public List<Item> loadItems(String textFile) {
         File file = new File(textFile);
         List<Item> items = new ArrayList<>();
@@ -18,10 +15,7 @@ public class Simulation {
 
             while(fileScanner.hasNextLine()) {
                 String[] data = fileScanner.nextLine().split("=");
-//                Item item = new Item(data[0], Integer.parseInt(data[1]));
                 items.add(new Item(data[0], Integer.parseInt(data[1])));
-
-//                System.out.println(data[0] + " " + data[1]);
             }
 
         } catch(FileNotFoundException ex) {
@@ -35,27 +29,30 @@ public class Simulation {
         System.out.println("Loading U1...");
         List<Rocket> rocketU1 = new ArrayList<>();
         Rocket rocket = new Rocket(100000000, 10000, 18000, 5, 1);
-//        int u1Count = 1;
-//        Iterator iterator = items.iterator();
 
-//        for(Item item: items) {
-//            for(Rocket rk: rocketU1) {
-//                if(rocket.canCarry(item)){
-//                    rocket.carry(item);
-//                }
-//            }
-//        }
+        int u1count = 1;
+        boolean carried;
+        rocketU1.add(rocket);
 
         for(Item item: items) {
-            while(!rocket.canCarry(item)) {
-                rocketU1.add(rocket);
-                rocket = new Rocket(100000000, 10000, 18000, 5, 1);
-//                u1Count++;
+            carried = false;
+            for(Rocket rk: rocketU1) {
+                if(rk.canCarry(item)){
+                    rk.carry(item);
+                    carried = true;
+                    break;
+                }
             }
-            rocket.carry(item);
+            if(!carried) {
+                rocket = new Rocket(100000000, 10000, 18000, 5, 1);
+                rocket.carry(item);
+                rocketU1.add(rocket);
+                u1count++;
+            }
         }
 
-        rocketU1.add(rocket);
+        System.out.println("Total U1 rockets loaded: " + u1count);
+
         return rocketU1;
 
     }
@@ -64,25 +61,29 @@ public class Simulation {
         System.out.println("Loading U2...");
         List<Rocket> rocketU2 = new ArrayList<>();
         Rocket rocket = new Rocket(120000000, 18000, 29000, 4, 8);
-        Iterator iterator = items.iterator();
 
-        while(iterator.hasNext()) {
-            Item item = (Item) iterator.next();
+        int u2count = 1;
+        boolean carried;
+        rocketU2.add(rocket);
 
-            if(rocket.canCarry(item)) {
-                rocket.carry(item);
-            } else {
-                rocketU2.add(rocket);
-                rocket = new  Rocket(120000000, 18000, 29000, 4, 8);
-                System.out.println("New rocket U2 created");
-                rocket.carry(item);
+
+        for(Item item: items) {
+            carried = false;
+            for(Rocket rk: rocketU2) {
+                if(rk.canCarry(item)){
+                    rk.carry(item);
+                    carried = true;
+                    break;
+                }
             }
-
-            if (!iterator.hasNext()) {
+            if(!carried) {
+                rocket = new Rocket(120000000, 18000, 29000, 4, 8);
+                rocket.carry(item);
                 rocketU2.add(rocket);
+                u2count++;
             }
-
         }
+        System.out.println("Total U2 rockets loaded: " + u2count);
 
         return rocketU2;
 
@@ -103,6 +104,7 @@ public class Simulation {
             }
         }
 
+//        System.out.println("Failure Count:" + failureCount);
         totalCost = rockets.get(0).getCost() * (rockets.size() + failureCount);
 
         return totalCost;
@@ -133,9 +135,10 @@ public class Simulation {
         long u2BudgetPhase1 = s.runSimulation(u2FleetPhase1);
         long u2BudgetPhase2 = s.runSimulation(u2FleetPhase2);
 
+        System.out.println("****************************************");
         System.out.println("U2 fleet budget for phase 1: $" + u2BudgetPhase1/1000000 + " " + "millions");
         System.out.println("U2 fleet budget for phase 2: $" + u2BudgetPhase2/1000000 + " " + "millions");
-        System.out.println("U2 fleet total budget: $" + (u1BudgetPhase1 + u1BudgetPhase2)/1000000 + " " + "millions");
+        System.out.println("U2 fleet total budget: $" + (u2BudgetPhase1 + u2BudgetPhase2)/1000000 + " " + "millions");
     }
 
 }

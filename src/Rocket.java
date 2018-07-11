@@ -9,17 +9,12 @@ public class Rocket implements  SpaceShip {
     private int currentWeight;
     private int cargoWeight;
     private final int cargoLimit;
-//    float launchExplosionProbability;
-//    float landingCrashProbability;
-    int explosionPercentage;
-    int crashPercentage;
+    private int explosionPercentage;
+    private int crashPercentage;
     Random random = new Random();
-    double launchExplosionProbability = -1.0;
-    double landingCrashProbability = -1.0;
+    private double launchExplosionProbability = -1.0;
+    private double landingCrashProbability = -1.0;
 
-//    Rocket() {
-//
-//    }
 
     Rocket(long cost, int rocketWeight, int maxWeight, int explosion, int crash) {
         this.cost = cost;
@@ -38,12 +33,12 @@ public class Rocket implements  SpaceShip {
             launchExplosionProbability = ((double)explosionPercentage / 100) * ((double)cargoWeight / (double)cargoLimit);
         }
         double rand = random.nextDouble();
-        System.out.println("Random Number" + rand + " "+ launchExplosionProbability);
+
         if (launchExplosionProbability >= rand)  {
-            System.out.println("Launch Failed");
+            //System.out.println("Launch Failed");
             return false;
         }
-        System.out.println("Launch success");
+        //System.out.println("Launch success");
         return true;
     }
 
@@ -52,8 +47,11 @@ public class Rocket implements  SpaceShip {
             landingCrashProbability = ((double)crashPercentage / 100) * ((double)cargoWeight / (double)cargoLimit);
         }
         double rand = random.nextDouble();
-//        System.out.println("Random Number" + rand + " "+ landingCrashProbability);
-        if (landingCrashProbability >= rand) return false;
+        if (landingCrashProbability >= rand) {
+            //System.out.println("Landing Failed");
+            return false;
+        }
+        //System.out.println("Landing success");
         return true;
     }
 
@@ -68,21 +66,6 @@ public class Rocket implements  SpaceShip {
         balanceWeight = balanceWeight - item.weight;
     }
 
-    public int getCargoLimit() {
-        return cargoLimit;
-    }
-
-    public int getCargoWeight() {
-        return cargoWeight;
-    }
-
-    public int getCurrentWeight() {
-        return currentWeight;
-    }
-
-    public int getBalanceWeight() {
-        return balanceWeight;
-    }
     public long getCost() {
         return cost;
     }
